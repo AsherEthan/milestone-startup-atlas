@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f6f0" />
+    <script>
+      (() => {
+        let preference = 'system';
+        try {
+          const stored = localStorage.getItem('milestone-theme-v1');
+          if (['light', 'dark', 'system'].includes(stored)) preference = stored;
+        } catch {}
+        document.documentElement.dataset.themePreference = preference;
+        document.documentElement.dataset.theme = preference === 'system'
+          ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : preference;
+      })();
+    </script>
+    <meta name="description" content="基于《里程碑》一堂五步法的交互式 3D 创业地图。从需求到壁垒，用证据走好每一步。" />
+    <title>里程碑 · 创业作战地图</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到主要内容</a>
+    <div id="app"></div>
+    <noscript>此页面需要 JavaScript 来显示交互地图。完整文字内容请阅读项目中的《里程碑》创业地图.md。</noscript>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.vite/
+*.local
+*.log
+.env
+.env.*
+!.env.example
+.ccgui/
+.presentation_tools/
