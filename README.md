@@ -99,7 +99,18 @@ npm run build
 npm run preview -- --port 4173
 ```
 
-`dist/` 是静态部署产物。Three.js 按核心、渲染器与场景分包加载。部署到站点根路径时，直接托管整个 `dist/`；若部署到子路径，先在 `vite.config.js` 配置相应的 `base`。
+`dist/` 是静态部署产物。Three.js 按核心、渲染器与场景分包加载。Vite 使用相对资源路径 `base: './'`，支持站点根目录和 GitHub Pages 仓库子路径；部署时只需托管整个 `dist/`。页面导航使用 hash，不需要服务端路由重写。
+
+## GitHub Pages 托管
+
+网站地址：<https://AsherEthan.github.io/milestone-startup-atlas/>
+
+- 源码仓库为公开仓库，GitHub Pages 网站也对外公开。
+- `.github/workflows/deploy-pages.yml` 在推送到 `main` 时自动安装锁定版本的依赖、构建，并使用 GitHub 官方 Pages Actions 发布；也可在 Actions 页面手动运行。
+- 仓库的 **Settings → Pages → Build and deployment → Source** 使用 **GitHub Actions**。
+- 仅上传 `dist/` 作为网站产物，不包含本地未提交文件、依赖目录、测试报告或浏览器记录；部署使用内置 `GITHUB_TOKEN`，不需要个人访问令牌。
+- 作战画布和工具记录仍只保存在当前浏览器。本地开发地址与线上地址的记录不共享；迁移记录时，先在原地址导出 JSON，再到线上网站导入。
+
 
 ## 浏览器测试
 
