@@ -1,0 +1,49 @@
+.header-actions .ai-button { color: var(--accent-ink); border: 1px solid var(--line-strong); background: var(--accent-soft); white-space: nowrap; }
+.header-actions .ai-button:hover { background: var(--surface-raised); }
+#ai-skill-dialog { width: min(800px, calc(100vw - 32px)); }
+.skill-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 24px; }
+.skill-choices button { min-width: 0; min-height: 72px; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--paper); text-align: left; }
+.skill-choices button[aria-pressed='true'] { background: var(--accent-soft); border-color: var(--focus); box-shadow: inset 0 0 0 1px var(--focus); }
+.skill-choices strong { display: block; font-size: 14px; font-weight: 550; }
+.skill-choices small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+.skill-heading { display: flex; align-items: flex-start; gap: 16px; }
+.skill-symbol { display: grid; place-items: center; flex: 0 0 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); color: var(--accent-ink); }
+.skill-heading h2 { font-size: 27px; line-height: 1.5; letter-spacing: -.04em; margin-bottom: 10px; }
+.skill-heading p { color: var(--muted); font-size: 14px; line-height: 1.9; }
+.skill-route { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 20px; margin: 24px 0; list-style: none; background: var(--surface-soft); border: 1px solid var(--line); border-radius: var(--radius-md); }
+.skill-route li { min-width: 0; display: grid; gap: 5px; }
+.skill-route li > span { color: var(--accent-ink); font-size: 12px; }
+.skill-route strong { font-size: 14px; font-weight: 550; }
+.skill-route small { font-size: 12px; color: var(--muted); }
+.skill-field label { display: block; font-size: 14px; font-weight: 550; margin-bottom: 9px; }
+.skill-field label > small { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 8px; }
+.skill-field textarea, .skill-preview textarea { display: block; width: 100%; padding: 12px; border: 1px solid var(--input-border); border-radius: var(--radius-sm); background: var(--input-bg); color: var(--ink); font-size: 14px; line-height: 1.8; resize: vertical; }
+.skill-field > small { display: block; margin-top: 7px; font-size: 12px; color: var(--muted); }
+.skill-include { display: flex; align-items: flex-start; gap: 12px; padding: 16px 0; min-height: 44px; cursor: pointer; font-size: 14px; }
+.skill-include input { width: 18px; height: 18px; margin: 3px 0 0; flex: 0 0 auto; }
+.skill-include small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; }
+.skill-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.skill-actions > button { flex: 1 1 200px; }
+.skill-feedback { margin-top: 12px; padding: 12px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-ink); font-size: 13px; line-height: 1.8; }
+.skill-privacy { color: var(--muted); font-size: 12px; line-height: 1.9; margin: 12px 0 20px; }
+.skill-preview, .skill-install { border-top: 1px solid var(--line); }
+.skill-preview summary, .skill-install summary { min-height: 44px; padding: 12px 0; cursor: pointer; font-size: 13px; color: var(--ink); }
+#skill-length { font-size: 12px; color: var(--muted); margin-left: 8px; white-space: nowrap; }
+.skill-preview textarea { height: 300px; margin-bottom: 16px; font-family: ui-monospace, monospace; font-size: 12px; }
+.skill-install p { font-size: 13px; color: var(--muted); line-height: 1.9; margin: 0 0 12px; overflow-wrap: anywhere; }
+.skill-install strong { color: var(--ink); }
+.skill-install code { color: var(--accent-ink); }
+@media (max-width: 760px) {
+  .header-actions .ai-button { min-height: 44px; padding: 8px; font-size: 12px; }
+  .header-actions .ai-button > .icon { display: none; }
+}
+@media (max-width: 520px) {
+  #ai-skill-dialog { padding: 20px; }
+  .skill-heading { gap: 10px; }
+  .skill-heading h2 { font-size: 22px; }
+  .skill-symbol { flex-basis: 34px; height: 36px; }
+  .skill-route { grid-template-columns: 1fr; gap: 14px; padding: 16px; margin: 20px 0; }
+  .skill-route li { grid-template-columns: 24px minmax(0, 1fr); column-gap: 12px; }
+  .skill-route li > span { grid-row: span 2; padding-top: 1px; }
+  .skill-actions { gap: 9px; }
+}

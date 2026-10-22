@@ -123,7 +123,7 @@ for (const width of [320, 390, 768, 1440]) {
     await noPageOverflow(page);
     await page.getByRole('button', { name: '作战画布', exact: true }).click();
     await noPageOverflow(page);
-    await page.getByRole('button', { name: '阅读说明' }).click();
+    await page.getByRole('button', { name: '关于这张地图' }).click();
     await expect(page.locator('#info-dialog')).toBeVisible();
     await noPageOverflow(page);
     const dialog = await page.locator('#info-dialog').boundingBox();

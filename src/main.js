@@ -1,6 +1,8 @@
 import './design-system.css';
 import './styles.css';
 import './tools.css';
+import './ai-skill.css';
+import { mountAnalysisSkills } from './ai-skill.js';
 import { stages, methods, principles } from './data.js';
 import { mountToolbox, stageToolLinks, stageToolIds } from './tools.js';
 import { initializeTheme } from './theme.js';
@@ -11,6 +13,7 @@ const paths = {
   flag: '<path d="M5 21V4m0 0c4-4 8 4 14 0v10c-6 4-10-4-14 0"/>',
   arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
   chevron: '<path d="m9 5 7 7-7 7"/>',
+  sparkles: '<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3ZM20 2v4m-2-2h4"/>',
   book: '<path d="M12 5v16m0-16C9 2 4 3 2 4v15c4-2 7-1 10 2 3-3 6-4 10-2V4c-2-1-7-2-10 1Z"/>',
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
   map: '<path d="m9 3-7 4v14l7-4 6 4 7-4V3l-7 4-6-4Zm0 0v14m6-10v14"/>',
@@ -55,7 +58,7 @@ $('#app').innerHTML = `
       <button class="nav-link" data-view="tools">验证工具箱</button>
       <button class="nav-link" data-view="canvas">作战画布</button>
     </nav>
-    <div class="header-actions"><label class="theme-control"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z" fill="currentColor"/></svg><select id="theme-selector" aria-label="显示主题"><option value="light">浅色</option><option value="dark">深色</option><option value="system">跟随系统</option></select></label><button class="text-button source-button" aria-label="阅读说明">${icon('book')}<span>阅读说明</span></button><button class="export-button">${icon('download')}<span>导出画布</span></button></div>
+    <div class="header-actions"><label class="theme-control"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z" fill="currentColor"/></svg><select id="theme-selector" aria-label="显示主题"><option value="light">浅色</option><option value="dark">深色</option><option value="system">跟随系统</option></select></label><button class="text-button ai-button" aria-label="AI 分析" aria-haspopup="dialog" aria-controls="ai-skill-dialog">${icon('sparkles')}<span>AI 分析</span></button><button class="export-button">${icon('download')}<span>导出画布</span></button></div>
   </header>
   <main id="content" tabindex="-1">
     <section class="page-view map-view" id="view-map" aria-label="创业地图">
@@ -310,6 +313,7 @@ window.addEventListener('hashchange', () => {
   else if (location.hash === '#canvas') showView('canvas');
 });
 $('#scene-container').addEventListener('scene-error', handleSceneError);
+mountAnalysisSkills({ getRecords: () => structuredClone(records), icon });
 const theme = initializeTheme(mode => scene?.setTheme(mode), toast);
 selectStage(selected);
 toolbox = mountToolbox({

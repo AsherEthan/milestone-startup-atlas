@@ -67,7 +67,7 @@ test('text map, keyboard controls and modal are accessible', async ({ page }) =>
   await page.getByRole('tab', { name: '行动指南' }).focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: '过关信号' })).toBeFocused();
-  await page.getByRole('button', { name: '阅读说明' }).click();
+  await page.getByRole('button', { name: '关于这张地图' }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByRole('dialog')).toContainText('结束于第七章');
   await page.keyboard.press('Escape');
