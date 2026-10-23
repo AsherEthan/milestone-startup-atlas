@@ -19,7 +19,7 @@ test('Skill entry opens a standalone guide with install instructions and a reloa
   await expect(page.locator('dialog[open]')).toHaveCount(0);
   await expect(page.getByRole('button', { name: '使用 Skill', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('#view-map')).toBeHidden();
-  await expect(page.getByRole('heading', { name: '下载之后，怎么用？' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '发一句指令，安装后开始使用。' })).toBeVisible();
   await expect(page.locator('#view-skills')).toContainText('.claude/skills/');
   await expect(page.locator('#view-skills')).toContainText('/product-clarity');
   await expect(page.locator('#view-skills')).toContainText('/business-teardown');
@@ -92,6 +92,44 @@ test('denied clipboard opens and selects the matching preview with honest feedba
 });
 
 for (const [id, title] of skills) {
+  test(`${id} copies a scoped installation request without installing or contacting a service`, async ({ page }) => {
+    const external = [];
+    page.on('request', request => {
+      if (!request.url().startsWith('http://127.0.0.1:5173/') && !request.url().startsWith('blob:') && !request.url().startsWith('data:')) external.push(request.url());
+    });
+    await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: async text => { window.copiedInstall = text; } }, configurable: true,
+    }));
+    await openGuide(page);
+    const card = page.getByRole('article', { name: title, exact: true });
+    await card.getByRole('button', { name: '复制安装并开始指令' }).click();
+    const text = await page.evaluate(() => window.copiedInstall);
+    expect(text).toBe(await page.getByLabel(`${title}安装并开始指令`).inputValue());
+    for (const value of [repository, `skills/${id}/SKILL.md`, `.claude/skills/${id}/SKILL.md`, `/${id}`, '不要覆盖', '不改变全局设置', '不要声称已安装']) expect(text).toContain(value);
+    const otherId = skills.find(([other]) => other !== id)[0];
+    expect(text).not.toContain(otherId);
+    await expect(card.getByRole('status')).toContainText('本站未执行安装');
+    await expect(page.locator('.skill-manual')).not.toHaveAttribute('open', '');
+    expect(external).toEqual([]);
+  });
+}
+
+test('denied clipboard selects installation text rather than the full Skill', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', {
+    value: { writeText: async () => { throw new DOMException('Denied', 'NotAllowedError'); } }, configurable: true,
+  }));
+  await openGuide(page);
+  const card = page.getByRole('article', { name: '产品梳理', exact: true });
+  await card.getByRole('button', { name: '复制安装并开始指令' }).click();
+  const preview = page.getByLabel('产品梳理安装并开始指令');
+  await expect(preview).toBeVisible();
+  await expect(preview).toBeFocused();
+  expect(await preview.evaluate(el => el.selectionEnd - el.selectionStart === el.value.length)).toBe(true);
+  await expect(card.locator('.skill-content-preview')).not.toHaveAttribute('open', '');
+  await expect(card.getByRole('status')).toContainText('请手动复制');
+});
+
+for (const [id, title] of skills) {
   test(`${id} downloads an installable ZIP with the original Skill and no extra data`, async ({ page }) => {
     await openGuide(page);
     const card = page.getByRole('article', { name: title, exact: true });
@@ -134,13 +172,13 @@ for (const width of [320, 390, 1440]) {
       expect((await entry.boundingBox()).height).toBeGreaterThanOrEqual(44);
       for (const [id, title] of skills) {
         const card = page.getByRole('article', { name: title, exact: true });
-        const details = card.locator('details');
+        const details = card.locator('.skill-content-preview');
         if (!(await details.evaluate(el => el.open))) await details.locator('summary').click();
         await expect(page.getByLabel(`${title}完整 Skill 指引`)).toBeVisible();
         const download = card.getByRole('button', { name: `下载 ${id}.zip` });
-        await details.locator('summary').focus();
+        await download.focus();
         await page.keyboard.press('Shift+Tab');
-        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('Tab');
         await expect(download).toBeFocused();
         expect(await download.evaluate(el => getComputedStyle(el).outlineStyle)).not.toBe('none');
       }

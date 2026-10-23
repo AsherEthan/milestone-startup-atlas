@@ -13,6 +13,10 @@
 .skill-output strong { font-size: 14px; font-weight: 550; }
 .skill-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .skill-actions > button { flex: 1 1 180px; overflow-wrap: anywhere; }
+.skill-actions > [data-skill-install] { flex-basis: 100%; }
+.skill-manual { margin-top: 24px; border: 1px solid var(--line); border-radius: var(--radius-md); }
+.skill-manual > summary { min-height: 44px; padding: 16px 24px; cursor: pointer; font-size: 14px; }
+.skill-manual > .skill-how { border: 0; }
 .skill-guide-card .skill-feedback { margin-top: 12px; padding: 12px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--accent-ink); font-size: 13px; }
 .skill-preview { margin-top: 20px; border-top: 1px solid var(--line); }
 .skill-preview summary { display: list-item; min-height: 44px; padding: 12px 0; cursor: pointer; font-size: 13px; }
