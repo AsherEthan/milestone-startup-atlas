@@ -45,19 +45,42 @@ npm run dev -- --port 5173
 - 工具地址 `/#tool/工具ID` 与画布地址 `/#canvas` 支持刷新后留在当前工作区。
 - 设计原则、响应式与无障碍验收见 [界面设计规范](docs/UI设计规范.md)。
 
-## AI 分析：两份商业梳理 Skill
+## 使用 Skill：把方法带到自己的 AI 工具
 
-顶部“AI 分析”可切换两种 Skill，均支持预览、复制与下载。原阅读说明仍在页脚“关于这张地图”。
+顶部“使用 Skill”进入独立指南页（`/#skills`），不打开分析弹窗。网页只提供使用说明、完整指引复制、带正确目录结构的 Skill ZIP 下载和 GitHub 项目入口；原阅读说明仍在页脚“关于这张地图”。
 
 | Skill | 适用场景 | 主要产出 |
 | --- | --- | --- |
 | `skills/product-clarity/SKILL.md` | 从自己的产品想法开始，逐轮澄清用户、需求、产品内核和商业模式 | 产品作战卡、关键假设与本轮实验卡 |
 | `skills/business-teardown/SKILL.md` | 拆解成熟企业、品牌或具体业务线，明确地区、时期和证据口径 | 两大假设、五步拆解、九格全貌、单元经济、证据台账与可迁移经验 |
 
-- 两份 Skill 均含标准技能元数据；可以复制到普通 AI 聊天，或下载 `SKILL.md` 按支持技能的工具要求安装。成熟商业拆解要求区分事实、公司自述、推断与情景假设，不用成功故事替代经营证据。
-- 本站不提供在线推理，不要求 API Key，也不自动打开或向第三方发送资料。
-- 可选补充产品介绍或分析对象，也可主动勾选附带五步画布；默认不附带，工具库记录与版本历史不在分享范围。两种 Skill 的补充内容与勾选状态各自保留，不会在切换时混用。
-- 完整内容可在复制／下载前预览；补充文字只保留在当前页面会话，刷新后清空，不修改现有画布与工具记录。交给外部 AI 前请自行检查分享内容及该服务的数据政策。
+### 方式一：普通 AI 聊天，不用安装
+
+1. 选择一份 Skill，点击“复制完整指引”。
+2. 在你常用的 AI 助手中新建对话，粘贴并发送完整指引。
+3. 再介绍你的产品，或指定要拆解的企业、业务线与时期，按追问补充资料。
+
+这是将 Skill 当作对话指引使用，不等于在该平台原生安装技能；效果取决于所用模型和工具。
+
+### 方式二：安装到支持 Skill 的工具
+
+无需克隆整个网站仓库，直接在 [Skill 使用指南](https://asherethan.github.io/milestone-startup-atlas/#skills) 下载 `product-clarity.zip` 或 `business-teardown.zip`。每个压缩包只含对应的 `技能名/SKILL.md`，解压即有正确的技能文件夹。
+
+以 Claude Code 为例，把解压后含 `SKILL.md` 的文件夹复制到当前项目的 `.claude/skills/` 下；不要再套一层同名目录。可只安装需要的一份：
+
+```text
+.claude/skills/
+├── product-clarity/
+│   └── SKILL.md
+└── business-teardown/
+    └── SKILL.md
+```
+
+个人全局安装可放在 `~/.claude/skills/`。安装后输入 `/product-clarity` 或 `/business-teardown`，再描述需求。其他工具请遵循各自安装规范；下载文件本身不会自动安装或运行。详见 [Claude Code 官方说明](https://code.claude.com/docs/en/skills)。
+
+- 网页不接收产品描述、不读取或附带画布及工具库记录、不提供在线推理，也不要求 API Key。
+- 复制的指引和 ZIP 中的 `SKILL.md` 始终与原始 Skill 文件一致，不拼接任何个人资料；ZIP 在浏览器本地生成。请在外部 AI 工具中自行提供必要内容，并检查其数据政策。
+- 指南页提供 [GitHub Star 入口](https://github.com/AsherEthan/milestone-startup-atlas)，由使用者登录 GitHub 后主动操作；下载和使用无需先 Star，网站不调用 Star API。
 
 ## 工具库使用
 
@@ -152,7 +175,7 @@ npx playwright install chromium
 - `src/design-system.css`：共享的语义颜色、字号、间距、圆角、焦点和双主题变量。
 - `src/theme.js`：浅色／深色／跟随系统偏好及场景主题同步。
 - `src/styles.css`、`src/tools.css`：地图及工具工作台的响应式组件样式。
-- `src/ai-skill.js`、`src/ai-skill.css`：AI 分析入口、双 Skill 选择、独立补充资料、完整预览及复制／下载。
+- `src/ai-skill.js`、`src/ai-skill.css`：独立 Skill 指南页、原文件预览／复制、Skill ZIP 打包下载、两种使用方式与 GitHub Star 入口。
 - `skills/product-clarity/SKILL.md`、`skills/business-teardown/SKILL.md`：可独立使用的产品梳理与成熟商业拆解指引。
 - `docs/UI设计规范.md`：信息架构、组件层级、响应式与无障碍验收标准。
 - `《里程碑》创业地图.md`：详细文字版方法论与原文索引。
@@ -167,7 +190,7 @@ npx playwright install chromium
 
 ## 本次验证
 
-- `npm test`：70 项测试全部通过，包括真实 Chrome 交互、49 个工具回归、纯计算、备份格式、工作区刷新、主题与响应式检查，以及双 Skill 切换、独立资料、分享范围、剪贴板失败和实际下载。
+- `npm test`：70 项测试全部通过，包括真实 Chrome 交互、49 个工具回归、纯计算、备份格式、工作区刷新、主题与响应式检查，以及 Skill 指南路由、原文件复制、ZIP 实际下载／解包及内部目录和正文校验、无项目输入与资料附带、Star 链接和剪贴板失败回退。
 - `npm run build`：生产构建通过，无大体积单包告警。
 - 已实际操作并检查桌面／手机、浅色／深色地图与工具工作台截图；320、390、768、1440px 宽度的页面无整页横向溢出，标签无碰撞。
 - 浅色地图主色 `#218b64` 与深色主色 `#2dab7c` 均通过 dataviz 调色校验；主题跟随系统或用户选择，阶段含编号与文字，不依赖颜色识别。

@@ -2,7 +2,7 @@ import './design-system.css';
 import './styles.css';
 import './tools.css';
 import './ai-skill.css';
-import { mountAnalysisSkills } from './ai-skill.js';
+import { mountSkillGuide } from './ai-skill.js';
 import { stages, methods, principles } from './data.js';
 import { mountToolbox, stageToolLinks, stageToolIds } from './tools.js';
 import { initializeTheme } from './theme.js';
@@ -13,7 +13,7 @@ const paths = {
   flag: '<path d="M5 21V4m0 0c4-4 8 4 14 0v10c-6 4-10-4-14 0"/>',
   arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
   chevron: '<path d="m9 5 7 7-7 7"/>',
-  sparkles: '<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3ZM20 2v4m-2-2h4"/>',
+  star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>',
   book: '<path d="M12 5v16m0-16C9 2 4 3 2 4v15c4-2 7-1 10 2 3-3 6-4 10-2V4c-2-1-7-2-10 1Z"/>',
   download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',
   map: '<path d="m9 3-7 4v14l7-4 6 4 7-4V3l-7 4-6-4Zm0 0v14m6-10v14"/>',
@@ -58,7 +58,7 @@ $('#app').innerHTML = `
       <button class="nav-link" data-view="tools">验证工具箱</button>
       <button class="nav-link" data-view="canvas">作战画布</button>
     </nav>
-    <div class="header-actions"><label class="theme-control"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z" fill="currentColor"/></svg><select id="theme-selector" aria-label="显示主题"><option value="light">浅色</option><option value="dark">深色</option><option value="system">跟随系统</option></select></label><button class="text-button ai-button" aria-label="AI 分析" aria-haspopup="dialog" aria-controls="ai-skill-dialog">${icon('sparkles')}<span>AI 分析</span></button><button class="export-button">${icon('download')}<span>导出画布</span></button></div>
+    <div class="header-actions"><label class="theme-control"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z" fill="currentColor"/></svg><select id="theme-selector" aria-label="显示主题"><option value="light">浅色</option><option value="dark">深色</option><option value="system">跟随系统</option></select></label><button class="text-button skill-entry" data-view="skills" aria-controls="view-skills">${icon('book')}<span>使用 Skill</span></button><button class="export-button">${icon('download')}<span>导出画布</span></button></div>
   </header>
   <main id="content" tabindex="-1">
     <section class="page-view map-view" id="view-map" aria-label="创业地图">
@@ -101,6 +101,7 @@ $('#app').innerHTML = `
       <div class="canvas-table-wrap"><table class="canvas-table"><thead><tr><th>里程碑 / 核心问题</th><th>本轮状态</th><th>假设、证据与下一次验证</th><th><span class="sr-only">探索阶段</span></th></tr></thead><tbody>${stages.map((s, i) => `<tr><th scope="row"><span class="table-stage">${s.number}</span><strong>${s.name}</strong><p>${s.question}</p></th><td><label class="sr-only" for="status-${i}">${s.name}验证状态</label><select id="status-${i}" data-record="${i}">${validStatuses.map((v) => `<option>${v}</option>`).join('')}</select></td><td><label class="sr-only" for="note-${i}">${s.name}的假设与证据</label><textarea id="note-${i}" data-note="${i}" maxlength="5000" placeholder="我的假设：…&#10;已有证据：…&#10;下一次验证 / 预算 / 判定标准：…"></textarea></td><td><button class="icon-button" data-explore="${i}" aria-label="探索${s.name}">${icon('arrow')}</button></td></tr>`).join('')}</tbody></table></div>
       <div class="canvas-bottom"><span>支持 / 不支持 / 证据不足，都是有价值的结果。</span><button class="primary-button export-button">${icon('download')} 下载我的作战画布</button></div>
     </section>
+    <section class="page-view" id="view-skills" aria-label="Skill 使用指南" hidden></section>
   </main>
   <footer class="site-footer"><span class="footer-brand">MILESTONE<span>先全局预判，再重点执行。</span></span><button class="source-button">关于这张地图 ${icon('arrow')}</button><span class="footer-note">一份可反复使用的创业指南，不是成功的保证。</span></footer>
   <dialog id="info-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="eyebrow">MILESTONE / FIELD NOTES</span><button class="icon-button dialog-close" aria-label="关闭弹窗">${icon('close')}</button></div><div id="dialog-content"></div><button class="primary-button dialog-close">明白了，继续探索 ${icon('arrow')}</button></dialog>
@@ -148,10 +149,10 @@ function selectStage(index, { focus = false } = {}) {
 }
 
 function showView(view) {
-  if (!['map', 'tools', 'canvas'].includes(view)) return;
+  if (!['map', 'tools', 'canvas', 'skills'].includes(view)) return;
   currentView = view;
   $$('.page-view').forEach((section) => { section.hidden = section.id !== `view-${view}`; });
-  $$('.main-nav [data-view]').forEach((button) => {
+  $$('.main-nav [data-view], .header-actions [data-view]').forEach((button) => {
     const active = button.dataset.view === view;
     button.classList.toggle('active', active);
     if (active) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
@@ -163,6 +164,8 @@ function showView(view) {
     history.replaceState(null, '', `#tool/${toolbox.selectedId}`);
   } else if (view === 'canvas') {
     history.replaceState(null, '', '#canvas');
+  } else if (view === 'skills') {
+    history.replaceState(null, '', '#skills');
   }
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
@@ -311,9 +314,10 @@ window.addEventListener('hashchange', () => {
   const index = stages.findIndex((s) => s.id === location.hash.slice(1));
   if (index >= 0) { showView('map'); selectStage(index); }
   else if (location.hash === '#canvas') showView('canvas');
+  else if (location.hash === '#skills') showView('skills');
 });
 $('#scene-container').addEventListener('scene-error', handleSceneError);
-mountAnalysisSkills({ getRecords: () => structuredClone(records), icon });
+mountSkillGuide({ icon });
 const theme = initializeTheme(mode => scene?.setTheme(mode), toast);
 selectStage(selected);
 toolbox = mountToolbox({
@@ -329,6 +333,7 @@ toolbox = mountToolbox({
 });
 toolbox.restoreRoute(initialHash);
 if (initialHash === '#canvas') showView('canvas');
+else if (initialHash === '#skills') showView('skills');
 async function initializeScene() {
   try {
     const { StartupScene } = await import('./scene.js');
