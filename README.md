@@ -1,6 +1,6 @@
-# 里程碑 · 创业作战地图
+# 创业作战地图
 
-基于《里程碑》一堂五步法的交互式 Three.js 网页。使用原生 JavaScript、Three.js 和 Vite，不依赖远程字体、贴图或 CDN。
+基于需求、解决方案、商业模式、增长、壁垒的交互式 Three.js 网页。使用原生 JavaScript、Three.js 和 Vite，不依赖远程字体、贴图或 CDN。
 
 ## 启动
 
